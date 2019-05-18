@@ -23,3 +23,8 @@ terraform plan
 ```
 terraform apply
 ```
+
+5. terminate instance
+```
+terraform destroy
+```
