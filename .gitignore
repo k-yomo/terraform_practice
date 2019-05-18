@@ -1,1 +1,11 @@
+# terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+
+
+# env
+.envrc
+
+# ide
 .idea
