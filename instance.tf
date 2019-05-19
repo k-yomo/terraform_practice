@@ -1,19 +1,3 @@
-// these two environment variables below must be set
-// AWS_ACCESS_KEY_ID
-// AWS_SECRET_ACCESS_KEY
-provider "aws" {
-  region = "${var.region}"
-}
-
-# S3 bucket
-resource "aws_s3_bucket" "s3_bucket" {
-  # S3 bucket names must be unique across all AWS accounts
-  bucket = "k-yomo-terraform-practice"
-  acl    = "private"
-  region = "${var.region}"
-}
-
-// EC2 instance
 resource "aws_instance" "instance" {
   // Ubuntu 16.10 AMI
   ami           = "${var.amis[var.region]}"
@@ -47,7 +31,3 @@ resource "aws_eip" "ip" {
   instance = "${aws_instance.instance.id}"
 }
 
-// output can be queried using the 'terraform output' command
-output "ip" {
-  value = "${aws_eip.ip.public_ip}"
-}
