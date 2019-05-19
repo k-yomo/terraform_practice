@@ -18,6 +18,21 @@ resource "aws_instance" "instance" {
   ami = "ami-b374d5a5"
   instance_type = "t2.micro"
 
+  // Multiple provisioners are executed in the order they're defined
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.instance.public_ip} > ip_address.txt"
+  }
+
+  provisioner "local-exec" {
+    command = "cat ip_address.txt"
+  }
+
+  // Destroy-Time Provisioners
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "rm ip_address.txt"
+  }
+
   // explicit dependency
   depends_on = ["aws_s3_bucket.s3_bucket"]
 }
