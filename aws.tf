@@ -2,7 +2,7 @@
 // AWS_ACCESS_KEY_ID
 // AWS_SECRET_ACCESS_KEY
 provider "aws" {
-  region = "us-east-1"
+  region = "${var.region}"
 }
 
 # S3 bucket
@@ -10,31 +10,35 @@ resource "aws_s3_bucket" "s3_bucket" {
   # S3 bucket names must be unique across all AWS accounts
   bucket = "k-yomo-terraform-practice"
   acl    = "private"
+  region = "${var.region}"
 }
 
 // EC2 instance
 resource "aws_instance" "instance" {
   // Ubuntu 16.10 AMI
-  ami = "ami-b374d5a5"
+  ami           = "${var.amis[var.region]}"
   instance_type = "t2.micro"
 
   // Multiple provisioners are executed in the order they're defined
   provisioner "local-exec" {
-    command = "echo ${aws_instance.instance.public_ip} > ip_address.txt"
+    command = "echo ${aws_instance.instance.public_ip} > ./temp/ip_address.txt"
   }
 
   provisioner "local-exec" {
-    command = "cat ip_address.txt"
+    command = "cat ./temp/ip_address.txt"
   }
 
   // Destroy-Time Provisioners
   provisioner "local-exec" {
     when    = "destroy"
-    command = "rm ip_address.txt"
+    command = "rm ./temp/ip_address.txt"
+    // continue or fail
+    on_failure = "continue"
   }
 
   // explicit dependency
-  depends_on = ["aws_s3_bucket.s3_bucket"]
+  depends_on = [
+  "aws_s3_bucket.s3_bucket"]
 }
 
 // Elastic IP
