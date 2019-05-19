@@ -24,7 +24,12 @@ terraform plan
 terraform apply
 ```
 
-5. terminate instance
+## Check created instance's ip address
+```
+terraform output ip
+```
+
+## Terminate resources
 ```
 terraform destroy
 ```

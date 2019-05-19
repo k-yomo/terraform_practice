@@ -46,3 +46,8 @@ resource "aws_eip" "ip" {
   // implicit dependency that requires terraform to create instance first, then ip
   instance = "${aws_instance.instance.id}"
 }
+
+// output can be queried using the 'terraform output' command
+output "ip" {
+  value = "${aws_eip.ip.public_ip}"
+}
